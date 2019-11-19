@@ -4,7 +4,10 @@
   "description": "JS Cartpole Implementation",
   "private": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build-dev": "webpack --config webpack.config.js --mode development",
+    "build-prod": "webpack --config webpack.config.js --mode production",
+    "clean": "rm -f dist/*.js"
   },
   "module": {
     "rules": [
