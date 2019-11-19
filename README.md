@@ -10,6 +10,7 @@ Requires [Node and npm](https://nodejs.org/en/). Built with Node v13.1.0 and npm
 * `cd ubiquitous-parakeet`
 * `npm install`
 * `npx webpack`
+* open dist/index.html in your browser
 
 ## Notes
 
