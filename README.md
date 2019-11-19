@@ -9,8 +9,12 @@ Requires [Node and npm](https://nodejs.org/en/). Built with Node v13.1.0 and npm
 * `git clone git@github.com:nickjalbert/ubiquitous-parakeet.git`
 * `cd ubiquitous-parakeet`
 * `npm install`
-* `npx webpack`
+* `npm run build-dev`
 * open dist/index.html in your browser
+
+To build for production, use `npm run build-prod`.
+
+To clean the build, use `npm run clean`.
 
 ## Notes
 
