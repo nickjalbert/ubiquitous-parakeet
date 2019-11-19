@@ -7,7 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build-dev": "webpack --config webpack.config.js --mode development",
     "build-prod": "webpack --config webpack.config.js --mode production",
-    "clean": "rm -f dist/*.js"
+    "clean": "rm -f dist/*.js",
+    "lint": "./node_modules/.bin/eslint src/*.js"
   },
   "module": {
     "rules": [
@@ -17,8 +18,12 @@
         "use": {
           "loader": "babel-loader",
           "options": {
-            "presets": ["@babel/preset-env"],
-            "plugins": ["@babel/plugin-proposal-object-rest-spread"]
+            "presets": [
+              "@babel/preset-env"
+            ],
+            "plugins": [
+              "@babel/plugin-proposal-object-rest-spread"
+            ]
           }
         }
       }
@@ -38,6 +43,9 @@
     "@babel/core": "^7.7.2",
     "@babel/preset-env": "^7.7.1",
     "babel-loader": "^8.0.6",
+    "eslint": "^6.6.0",
+    "eslint-config-airbnb-base": "^14.0.0",
+    "eslint-plugin-import": "^2.18.2",
     "webpack": "^4.41.2",
     "webpack-cli": "^3.3.10"
   },
