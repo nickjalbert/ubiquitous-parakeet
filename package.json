@@ -1,0 +1,26 @@
+{
+  "name": "ubiquitous-parakeet",
+  "version": "1.0.0",
+  "description": "JS Cartpole Implementation",
+  "private": true,
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nickjalbert/ubiquitous-parakeet.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nickjalbert/ubiquitous-parakeet/issues"
+  },
+  "homepage": "https://github.com/nickjalbert/ubiquitous-parakeet#readme",
+  "devDependencies": {
+    "webpack": "^4.41.2",
+    "webpack-cli": "^3.3.10"
+  },
+  "dependencies": {
+    "lodash": "^4.17.15"
+  }
+}
