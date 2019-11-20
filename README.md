@@ -14,7 +14,7 @@ Requires [Node and npm](https://nodejs.org/en/). Built with Node v13.1.0 and npm
 
 To lint source code, use `npm run lint`.
 
-To build for production, use `npm run build-prod`.
+To build for production (separates out CSS and JS), use `npm run build-prod`.
 
 To clean the build, use `npm run clean`.
 
