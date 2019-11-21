@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import Cartpole from './cartpole';
-import styles from './index.module';
-import './global';
+import styles from '../styles/index.module';
+import '../styles/global';
 
 function component() {
   const cartpole = new Cartpole('Test');

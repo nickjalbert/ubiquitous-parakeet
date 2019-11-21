@@ -12,7 +12,7 @@ module.exports = env => {
     console.log(`Running development build: ${isDevelopment}`);
   }
   return {
-    entry: './src/index.js',
+    entry: './src/js/index.js',
     output: {
       filename: 'main.js',
       path: path.resolve(__dirname, 'dist'),
