@@ -12,7 +12,7 @@ module.exports = env => {
     console.log(`Running development build: ${isDevelopment}`);
   }
   return {
-    entry: './src/js/index.js',
+    entry: './src/js/index.jsx',
     output: {
       filename: 'main.js',
       path: path.resolve(__dirname, 'dist'),
@@ -20,7 +20,7 @@ module.exports = env => {
     module: {
       rules: [
         {
-          test: /\.m?js$/,
+          test: /\.(js|jsx)$/,
           exclude: /(node_modules|bower_components)/,
           use: {
             loader: 'babel-loader',

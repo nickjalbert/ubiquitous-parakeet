@@ -5,6 +5,7 @@ module.exports = {
   },
   extends: [
     'airbnb-base',
+    'plugin:react/recommended',
   ],
   globals: {
     Atomics: 'readonly',
@@ -15,6 +16,9 @@ module.exports = {
     sourceType: 'module',
   },
   settings: {
+    "react": {
+      "version": "detect", // React version. "detect" automatically picks the version you have installed.
+    },
     "import/resolver": {
       "webpack": {
         "config": "./webpack.config.js"

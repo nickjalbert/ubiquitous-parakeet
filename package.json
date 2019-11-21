@@ -8,7 +8,7 @@
     "build-dev": "npx webpack --config webpack.config.js --mode development --env.development",
     "build-prod": "npx webpack --config webpack.config.js --mode production --env.production",
     "clean": "rm -f dist/*",
-    "lint": "./node_modules/.bin/eslint ./src --ext js"
+    "lint": "./node_modules/.bin/eslint ./src --ext js --ext jsx"
   },
   "repository": {
     "type": "git",
@@ -23,12 +23,14 @@
   "devDependencies": {
     "@babel/core": "^7.7.2",
     "@babel/preset-env": "^7.7.1",
+    "@babel/preset-react": "^7.7.0",
     "babel-loader": "^8.0.6",
     "css-loader": "^3.2.0",
     "eslint": "^6.6.0",
     "eslint-config-airbnb-base": "^14.0.0",
     "eslint-import-resolver-webpack": "^0.11.1",
     "eslint-plugin-import": "^2.18.2",
+    "eslint-plugin-react": "^7.16.0",
     "html-webpack-plugin": "^3.2.0",
     "mini-css-extract-plugin": "^0.8.0",
     "node-sass": "^4.13.0",
@@ -38,6 +40,8 @@
     "webpack-cli": "^3.3.10"
   },
   "dependencies": {
-    "lodash": "^4.17.15"
+    "lodash": "^4.17.15",
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0"
   }
 }
