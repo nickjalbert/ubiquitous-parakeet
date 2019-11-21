@@ -1,9 +1,18 @@
-.cartpoleContainer {
+.cartpoleRenderer {
+  position: relative;
   width: 800px;
   height: 500px;
   margin-left: auto;
   margin-right: auto;
   background-color: white;
+}
+
+.cartpoleContainer {
+  margin-left: auto;
+  margin-right: auto;
+  width: 90%;
+  height: 50%;
+  background-color: #cccccc;
 }
 
 .redText {

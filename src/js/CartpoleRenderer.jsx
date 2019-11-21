@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import CartpoleEngine from './CartpoleEngine';
+import CartpoleContainer from './CartpoleContainer';
 import styles from '../styles/cartpole.module';
 
 function CartpoleRenderer() {
@@ -41,8 +42,9 @@ function CartpoleRenderer() {
   };
 
   return (
-    <div className={styles.cartpoleContainer}>
+    <div className={styles.cartpoleRenderer}>
       <h1 className={styles.redText}>Cartpole</h1>
+      <CartpoleContainer x={x} xDot={xDot} theta={theta} thetaDot={thetaDot} />
       <ul>
         <li><b>Reward:</b><span>{reward}</span></li>
         <li><b>Done:</b><span>{done ? 'Yes' : 'No'}</span></li>
