@@ -3,6 +3,9 @@ module.exports = {
     browser: true,
     es6: true,
   },
+  plugins: [
+    'react-hooks',
+  ],
   extends: [
     'airbnb-base',
     'plugin:react/recommended',
@@ -26,5 +29,7 @@ module.exports = {
     }
   },
   rules: {
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "warn",
   },
 };
