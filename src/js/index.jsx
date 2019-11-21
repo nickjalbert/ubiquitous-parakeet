@@ -4,13 +4,21 @@ import Cartpole from './cartpole';
 import styles from '../styles/index.module';
 import '../styles/global';
 
-function component() {
+function initPage() {
   const cartpole = new Cartpole('Test');
   const element = document.createElement('div');
-  element.classList.add(styles.redText);
   const jsxTest = <h2 className={styles.redText}>Hello React {cartpole.getName()}</h2>;
+  document.body.appendChild(element);
   ReactDOM.render(jsxTest, element);
-  return element;
 }
 
-document.body.appendChild(component());
+// http://youmightnotneedjquery.com/#ready
+function ready(fn) {
+  if (document.readyState !== 'loading') {
+    fn();
+  } else {
+    document.addEventListener('DOMContentLoaded', fn);
+  }
+}
+
+ready(initPage);
