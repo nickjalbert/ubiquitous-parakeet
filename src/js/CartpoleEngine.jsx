@@ -1,9 +1,8 @@
 // Ported from:
 // https://github.com/openai/gym/blob/master/gym/envs/classic_control/cartpole.py
 
-class Cartpole {
-  constructor(name) {
-    this.name = name;
+class CartpoleEngine {
+  constructor() {
     this.gravity = 9.8;
     this.masscart = 1.0;
     this.poleMass = 0.1;
@@ -17,16 +16,12 @@ class Cartpole {
     // Angle at which to fail the episode
     this.thetaThresholdRadians = (12 * 2 * Math.PI) / 360;
     this.xThreshold = 2.4;
-    this.reset();
   }
 
-  step(action) {
-    if (action !== 1 && action !== 0) {
+  step(action, x, xDot, theta, thetaDot) {
+    if (action !== 0 && action !== 1) {
       throw new Error(`Invalid action: ${action}, Choose 0 or 1`);
     }
-    const {
-      x, xDot, theta, thetaDot,
-    } = this.state;
     const force = action === 1 ? this.forceMag : (-1 * this.forceMag);
     const cosTheta = Math.cos(theta);
     const sinTheta = Math.sin(theta);
@@ -37,41 +32,31 @@ class Cartpole {
     const thetaAccel = numerator / denominator;
     const xAccel = temp - (this.poleMassLength * thetaAccel * cosTheta) / this.totalMass;
 
-    // Euler kinematics integrator
-    this.state = {
-      x: x + this.tau * xDot,
-      xDot: xDot + this.tau * xAccel,
-      theta: theta + this.tau * thetaDot,
-      thetaDot: thetaDot + this.tau * thetaAccel,
-    };
+    const newX = x + this.tau * xDot;
+    const newXDot = xDot + this.tau * xAccel;
+    const newTheta = theta + this.tau * thetaDot;
+    const newThetaDot = thetaDot + this.tau * thetaAccel;
 
-    const done = (
-      this.state.x < (-1 * this.xThreshold)
-      || this.state.x > this.xThreshold
-      || this.state.theta < (-1 * this.thetaThresholdRadians)
-      || this.state.theta > this.thetaThresholdRadians
+    const stepDone = (
+      newX < (-1 * this.xThreshold)
+      || newX > this.xThreshold
+      || newTheta < (-1 * this.thetaThresholdRadians)
+      || newTheta > this.thetaThresholdRadians
     );
-    const reward = done ? 0 : 1;
+    const stepReward = stepDone ? 0 : 1;
     return {
-      reward,
-      done,
-      ...this.state,
+      stepReward,
+      stepDone,
+      newX,
+      newXDot,
+      newTheta,
+      newThetaDot,
     };
   }
 
-  reset() {
-    const randomInit = () => ((Math.random() * 0.1) - 0.05);
-    this.state = {
-      x: randomInit(),
-      xDot: randomInit(),
-      theta: randomInit(),
-      thetaDot: randomInit(),
-    };
-  }
-
-  getName() {
-    return this.name;
+  static getRandomInitValue() {
+    return (Math.random() * 0.1) - 0.05;
   }
 }
 
-export default Cartpole;
+export default CartpoleEngine;

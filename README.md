@@ -14,6 +14,8 @@ Requires [Node and npm](https://nodejs.org/en/). Built with Node v13.1.0 and npm
 
 To lint source code, use `npm run lint`.
 
+To run a dev server, use `npm run serve` and then visit [localhost:8080](http://localhost:8080).
+
 To build for production (separates out CSS and JS), use `npm run build-prod`.
 
 To clean the build, use `npm run clean`.
