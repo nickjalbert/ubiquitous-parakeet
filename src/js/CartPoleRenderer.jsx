@@ -51,6 +51,7 @@ function CartPoleRenderer() {
         <li><b>X:</b><span>{x}</span></li>
         <li><b>Xdot:</b><span>{xDot}</span></li>
         <li><b>theta:</b><span>{theta}</span></li>
+        <li><b>pole angle:</b><span>{theta * (180 / Math.PI)}</span></li>
         <li><b>thetaDot:</b><span>{thetaDot}</span></li>
       </ul>
       <button onClick={stepLeft}>Left</button>

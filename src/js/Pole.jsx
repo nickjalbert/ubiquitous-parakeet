@@ -5,8 +5,12 @@ import styles from '../styles/cartpole.module';
 
 function Pole(props) {
   const poleWidth = 10;
+  const poleAngle = props.theta * (180 / Math.PI);
+  // Adding pole angle below is a hack to make it animate more naturally
+  const poleLeft = calculateLeftPx(props.x, poleWidth) + poleAngle;
   const poleStyle = {
-    left: calculateLeftPx(props.x, poleWidth),
+    left: poleLeft,
+    transform: `rotate(${poleAngle}deg)`,
   };
 
   return (
