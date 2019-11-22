@@ -43,8 +43,8 @@ function CartPoleRenderer() {
 
   return (
     <div className={styles.cartpoleRenderer}>
-      <h1 className={styles.redText}>Cartpole</h1>
-      <CartPoleContainer x={x} theta={theta} />
+      <h1 className={styles.titleText}>Cartpole</h1>
+      <CartPoleContainer reward={reward} done={done} x={x} theta={theta} />
       <ul>
         <li><b>Reward:</b><span>{reward}</span></li>
         <li><b>Done:</b><span>{done ? 'Yes' : 'No'}</span></li>

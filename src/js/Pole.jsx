@@ -19,8 +19,8 @@ function Pole(props) {
 }
 
 Pole.propTypes = {
-  x: PropTypes.number,
-  theta: PropTypes.number,
+  x: PropTypes.number.isRequired,
+  theta: PropTypes.number.isRequired,
 };
 
 export default Pole;

@@ -6,6 +6,11 @@
   background-color: white;
 }
 
+.titleText {
+  padding: 1rem 0 0 1rem;
+  color: blue;
+}
+
 .cartpoleContainer {
   position: relative;
   margin-left: auto;
@@ -31,6 +36,19 @@
   background-color: black;
 }
 
-.redText {
-  color: blue;
+.resultAlert {
+  width: 150px;
+  position: absolute;
+  right: 0px;
+  padding: 1rem;
+  font-weight: 600;
+  text-align: right;
+}
+
+.scoreboard {
+  width: 150px;
+  position: absolute;
+  left: 0px;
+  padding: 1rem;
+  font-weight: 600;
 }

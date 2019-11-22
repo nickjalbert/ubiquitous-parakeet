@@ -14,7 +14,7 @@ function Cart(props) {
 }
 
 Cart.propTypes = {
-  x: PropTypes.number,
+  x: PropTypes.number.isRequired,
 };
 
 export default Cart;
