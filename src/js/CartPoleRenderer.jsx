@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import CartPoleEngine from './CartPoleEngine';
 import CartPoleContainer from './CartPoleContainer';
 import styles from '../styles/cartpole.module';
@@ -22,8 +22,8 @@ function CartPoleRenderer() {
       newTheta,
       newThetaDot,
     } = cartpole.step(action, x, xDot, theta, thetaDot);
-    setReward(reward + stepReward);
-    setDone(stepDone);
+    setReward(done ? reward : reward + stepReward); // no scoring after done
+    setDone(done || stepDone); // So we don't get undone
     setX(newX);
     setXDot(newXDot);
     setTheta(newTheta);
@@ -40,6 +40,22 @@ function CartPoleRenderer() {
     setTheta(initFn());
     setThetaDot(initFn());
   };
+
+  // Set keyboard bindings
+  const keyUpHandler = ({ key }) => {
+    if (key === 'ArrowRight') {
+      stepRight();
+    }
+    if (key === 'ArrowLeft') {
+      stepLeft();
+    }
+  };
+  useEffect(() => {
+    window.addEventListener('keyup', keyUpHandler);
+    return () => {
+      window.removeEventListener('keyup', keyUpHandler);
+    };
+  });
 
   return (
     <div className={styles.cartpoleRenderer}>
