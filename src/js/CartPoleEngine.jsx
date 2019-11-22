@@ -1,7 +1,7 @@
 // Ported from:
 // https://github.com/openai/gym/blob/master/gym/envs/classic_control/cartpole.py
 
-class CartpoleEngine {
+class CartPoleEngine {
   constructor() {
     this.gravity = 9.8;
     this.masscart = 1.0;
@@ -59,4 +59,4 @@ class CartpoleEngine {
   }
 }
 
-export default CartpoleEngine;
+export default CartPoleEngine;

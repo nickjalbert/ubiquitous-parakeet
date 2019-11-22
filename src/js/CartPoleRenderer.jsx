@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import CartpoleEngine from './CartpoleEngine';
-import CartpoleContainer from './CartpoleContainer';
+import CartPoleEngine from './CartPoleEngine';
+import CartPoleContainer from './CartPoleContainer';
 import styles from '../styles/cartpole.module';
 
-function CartpoleRenderer() {
-  const cartpole = new CartpoleEngine();
-  const initFn = () => CartpoleEngine.getRandomInitValue();
+function CartPoleRenderer() {
+  const cartpole = new CartPoleEngine();
+  const initFn = () => CartPoleEngine.getRandomInitValue();
   const [x, setX] = useState(initFn);
   const [xDot, setXDot] = useState(initFn);
   const [theta, setTheta] = useState(initFn);
@@ -44,7 +44,7 @@ function CartpoleRenderer() {
   return (
     <div className={styles.cartpoleRenderer}>
       <h1 className={styles.redText}>Cartpole</h1>
-      <CartpoleContainer x={x} theta={theta} />
+      <CartPoleContainer x={x} theta={theta} />
       <ul>
         <li><b>Reward:</b><span>{reward}</span></li>
         <li><b>Done:</b><span>{done ? 'Yes' : 'No'}</span></li>
@@ -60,4 +60,4 @@ function CartpoleRenderer() {
   );
 }
 
-export default CartpoleRenderer;
+export default CartPoleRenderer;

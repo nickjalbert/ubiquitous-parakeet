@@ -4,7 +4,7 @@ import Pole from './Pole';
 import Cart from './Cart';
 import styles from '../styles/cartpole.module';
 
-function CartpoleContainer(props) {
+function CartPoleContainer(props) {
   return (
     <div className={styles.cartpoleContainer}>
       <Pole x={props.x} theta={props.theta} />
@@ -13,9 +13,9 @@ function CartpoleContainer(props) {
   );
 }
 
-CartpoleContainer.propTypes = {
+CartPoleContainer.propTypes = {
   x: PropTypes.number,
   theta: PropTypes.number,
 };
 
-export default CartpoleContainer;
+export default CartPoleContainer;
