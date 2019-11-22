@@ -1,5 +1,4 @@
 .cartpoleRenderer {
-  position: relative;
   width: 800px;
   height: 500px;
   margin-left: auto;
@@ -8,11 +7,28 @@
 }
 
 .cartpoleContainer {
+  position: relative;
   margin-left: auto;
   margin-right: auto;
-  width: 90%;
-  height: 50%;
+  width: 700px;
+  height: 250px;
   background-color: #cccccc;
+}
+
+.pole {
+  width: 10px;
+  height: 150px;
+  position: absolute;
+  bottom: 50px;
+  background-color: green;
+}
+
+.cart {
+  width: 100px;
+  height: 50px;
+  position: absolute;
+  bottom: 0px;
+  background-color: black;
 }
 
 .redText {

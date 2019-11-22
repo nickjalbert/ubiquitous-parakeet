@@ -1,13 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import calculateLeftPx from './Utility';
 import styles from '../styles/cartpole.module';
 
 function Pole(props) {
+  const poleWidth = 10;
+  const poleStyle = {
+    left: calculateLeftPx(props.x, poleWidth),
+  };
+
   return (
-    <div className={styles.pole}>
-      This is a pole at {props.theta} degrees
-      with a cart at {props.x}
-    </div>
+    <div className={styles.pole} style={poleStyle} />
   );
 }
 
