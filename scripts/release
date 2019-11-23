@@ -1,0 +1,36 @@
+#!/bin/bash
+
+set -eu
+
+BUILD_REPO="/home/nickjalbert/ubiquitous-parakeet"
+PUBLISH_REPO="/home/nickjalbert/convexoptv2"
+PUBLISH_DIR="$PUBLISH_REPO/cartpole"
+
+if [ ! -d "$BUILD_REPO" ]; then
+    echo "Could not find $BUILD_REPO to build project"
+    exit 1
+fi
+
+if [ ! -d "$PUBLISH_REPO" ]; then
+    echo "Could not find $PUBLISH_REPO to publish project"
+    exit 1
+fi
+
+read -p "Are you sure you want to deploy to convexopt.com/cartpole? " -n 1 -r
+echo
+if [[ $REPLY =~ ^[Yy]$ ]]
+then
+    cd $BUILD_REPO
+    npm run clean
+    npm run build-prod
+    mkdir -p "$PUBLISH_DIR"
+    rm -rf "$PUBLISH_REPO/cartpole"
+    cp -r "$BUILD_REPO/dist" "$PUBLISH_REPO/tmpbuild"
+    mv "$PUBLISH_REPO/tmpbuild" "$PUBLISH_REPO/cartpole"
+    cd $PUBLISH_REPO
+    git add ./cartpole
+    git commit -a -m "Publish updated cartpole"
+    git push
+fi
+
+

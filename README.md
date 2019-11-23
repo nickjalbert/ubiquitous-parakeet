@@ -20,6 +20,9 @@ To build for production (separates out CSS and JS), use `npm run build-prod`.
 
 To clean the build, use `npm run clean`.
 
+To deploy to [www.convexopt.com/cartpole](https://www.convexopt.com/cartpole),
+run `./scripts/release`.
+
 ## Notes
 
 * Initial setup based on [Webpack quickstart](https://webpack.js.org/guides/getting-started/)
