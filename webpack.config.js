@@ -72,7 +72,7 @@ module.exports = env => {
         filename: isDevelopment ? '[name].css' : '[name].[hash].css',
         chunkFilename: isDevelopment ? '[id].css' : '[id].[hash].css'
       }),
-      new HtmlWebpackPlugin(),
+      new HtmlWebpackPlugin({title: 'Cartpole'}),
     ],
   }
 };
