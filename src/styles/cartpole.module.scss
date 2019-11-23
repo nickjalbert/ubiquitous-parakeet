@@ -5,19 +5,20 @@
   margin-left: auto;
   margin-right: auto;
   margin-bottom: 2rem;
+  padding: 1.5rem 1.5rem;
   background-color: $color--vvv-light-grey;
 }
 
 .titleText {
-  padding: 1rem 0 0 1rem;
-  margin-bottom: 2rem;
+  margin: 0 0 1.5rem 0;
+
 }
 
 .cartpoleContainer {
   position: relative;
   margin-left: auto;
   margin-right: auto;
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
   width: 700px;
   height: 250px;
   background-color: $color--v-light-grey;
@@ -59,13 +60,14 @@
 
 .instructions {
   text-align: center;
+  margin-bottom: 2.5rem;
 }
 
 .divider {
   display: block;
   width: 100%;
   border-top: 1px solid $color--vv-light-grey;
-  margin-bottom: 0.5rem;
+  height: 1.5rem;
 }
 
 .description {
@@ -76,21 +78,14 @@
     margin: 0.75rem 0.5rem 0.75rem 0.5rem;
     & li {
       margin: .5rem;
-
     }
-
-  }
-  &__notes {
-    margin: 0 2rem 1rem 2rem;
-    padding-bottom: 1rem;
-    font-size: .85rem;
   }
 }
 
 .link { }
 
 .instruments {
-  margin-top: 2rem;
+  margin-bottom: 2.5rem;
   text-align: center;
   &__container {
     padding: 1rem;
@@ -111,6 +106,7 @@
 
 .controls {
   &__panel {
+    margin-bottom: 1.5rem;
     width:100%;
     background-color: $color--vvv-light-grey;
     text-align: center;
@@ -125,6 +121,6 @@
     text-decoration: none;
     display: inline-block;
     font-size: 16px;
-    margin: 2rem;
+    margin: 0 2rem;
   }
 }
