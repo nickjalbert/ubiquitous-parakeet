@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import calculateLeftPx from './Utility';
+import { calculateLeftPx } from './Utility';
 import styles from '../styles/cartpole.module';
 
 function Pole(props) {

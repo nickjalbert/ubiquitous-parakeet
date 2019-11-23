@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
+
 import CartPoleEngine from './CartPoleEngine';
 import CartPoleContainer from './CartPoleContainer';
+
 import styles from '../styles/cartpole.module';
 
 const OPEN_AI_IMPL_URL = [
@@ -45,6 +47,14 @@ function CartPoleRenderer() {
     setXDot(initFn());
     setTheta(initFn());
     setThetaDot(initFn());
+  };
+
+  const doRandomAction = () => {
+    stepFn(Math.random() >= 0.5 ? 0 : 1);
+  };
+
+  const randomAgent = () => {
+    doRandomAction();
   };
 
   // Set keyboard bindings
@@ -123,6 +133,12 @@ function CartPoleRenderer() {
         </button>
         <button className={styles.controls__button} onClick={stepRight}>
           Push cart right
+        </button>
+      </div>
+      <div className={styles.divider}>&nbsp;</div>
+       <div className={styles.controls__panel}>
+        <button className={styles.controls__button} onClick={randomAgent}>
+          Random Agent
         </button>
       </div>
       <div className={styles.divider}>&nbsp;</div>
