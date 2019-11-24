@@ -10,8 +10,9 @@ const OPEN_AI_IMPL_URL = [
   'master/gym/envs/classic_control/cartpole.py',
 ].join('');
 
-const ACTION_LEFT = 0;
-const ACTION_RIGHT = 1;
+const LEFT = 0;
+const RIGHT = 1;
+const RUN_INTERVAL = 200;
 
 function getKeyboardBindingFn(stepLeft, stepRight) {
   const keyUpHandler = ({ key }) => {
@@ -28,18 +29,26 @@ function getKeyboardBindingFn(stepLeft, stepRight) {
   };
 }
 
+function autoRunStep(currState, setSimState) {
+  const action = (Math.random() >= 0.5 ? LEFT : RIGHT);
+  const newState = CartPoleEngine.step(action, currState);
+  setSimState(newState);
+  if (!newState.done) {
+    setTimeout(() => autoRunStep(newState, setSimState), RUN_INTERVAL);
+  }
+}
 
 function CartPoleApp() {
-  const cartpole = new CartPoleEngine();
   const [simState, setSimState] = useState(CartPoleEngine.getInitialState());
 
-  const stepLeft = () => setSimState(cartpole.step(ACTION_LEFT, simState));
-  const stepRight = () => setSimState(cartpole.step(ACTION_RIGHT, simState));
+  const stepLeft = () => setSimState(CartPoleEngine.step(LEFT, simState));
+  const stepRight = () => setSimState(CartPoleEngine.step(RIGHT, simState));
   const resetFn = () => setSimState(CartPoleEngine.getInitialState());
   const stepRandom = () => (Math.random() >= 0.5 ? stepLeft() : stepRight());
-
-  const keyboardBindingFn = getKeyboardBindingFn(stepLeft, stepRight);
-  useEffect(keyboardBindingFn);
+  const randomAgent = () => {
+    setTimeout(() => autoRunStep(simState, setSimState), RUN_INTERVAL);
+  };
+  useEffect(getKeyboardBindingFn(stepLeft, stepRight));
 
   return (
     <div className={styles.cartpoleApp}>
@@ -106,6 +115,9 @@ function CartPoleApp() {
       <div className={styles.divider}>&nbsp;</div>
        <div className={styles.controls__panel}>
         <button className={styles.controls__button} onClick={stepRandom}>
+          Random Step
+        </button>
+        <button className={styles.controls__button} onClick={randomAgent}>
           Random Agent
         </button>
       </div>

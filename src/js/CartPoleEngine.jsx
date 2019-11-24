@@ -2,22 +2,6 @@
 // https://github.com/openai/gym/blob/master/gym/envs/classic_control/cartpole.py
 
 class CartPoleEngine {
-  constructor() {
-    this.gravity = 9.8;
-    this.masscart = 1.0;
-    this.poleMass = 0.1;
-    this.totalMass = (this.poleMass + this.masscart);
-    // actually half the pole's length
-    this.length = 0.5;
-    this.poleMassLength = (this.poleMass * this.length);
-    this.forceMag = 10.0;
-    // seconds between state updates
-    this.tau = 0.02;
-    // Angle at which to fail the episode
-    this.thetaThresholdRadians = (12 * 2 * Math.PI) / 360;
-    this.xThreshold = 2.4;
-  }
-
   static getInitialState() {
     return {
       totalReward: 0,
@@ -30,33 +14,45 @@ class CartPoleEngine {
     };
   }
 
-  step(action, state) {
+  static step(action, state) {
+    // Define constants
+    const GRAVITY = 9.8;
+    const CART_MASS = 1.0;
+    const POLE_MASS = 0.1;
+    const TOTAL_MASS = (POLE_MASS + CART_MASS);
+    const POLE_LENGTH = 0.5; // actually half the pole's length
+    const POLE_MASS_LENGTH = (POLE_MASS * POLE_LENGTH);
+    const FORCE_MAG = 10.0;
+    const TAU = 0.02; // seconds between state updates
+    const THETA_THRESHOLD_RADIANS = (12 * 2 * Math.PI) / 360;
+    const X_THRESHOLD = 2.4;
+
     if (action !== 0 && action !== 1) {
       throw new Error(`Invalid action: ${action}, Choose 0 or 1`);
     }
     const {
       totalReward, done, x, xDot, theta, thetaDot,
     } = state;
-    const force = action === 1 ? this.forceMag : (-1 * this.forceMag);
+    const force = action === 1 ? FORCE_MAG : (-1 * FORCE_MAG);
     const cosTheta = Math.cos(theta);
     const sinTheta = Math.sin(theta);
-    const temp = (force + (this.poleMassLength * thetaDot * thetaDot * sinTheta)) / this.totalMass;
-    const numerator = (this.gravity * sinTheta) - (cosTheta * temp);
-    const poleMassCosThetaSquared = this.poleMass * cosTheta * cosTheta;
-    const denominator = this.length * ((4.0 / 3.0) - (poleMassCosThetaSquared / this.totalMass));
+    const temp = (force + (POLE_MASS_LENGTH * thetaDot * thetaDot * sinTheta)) / TOTAL_MASS;
+    const numerator = (GRAVITY * sinTheta) - (cosTheta * temp);
+    const poleMassCosThetaSquared = POLE_MASS * cosTheta * cosTheta;
+    const denominator = POLE_LENGTH * ((4.0 / 3.0) - (poleMassCosThetaSquared / TOTAL_MASS));
     const thetaAccel = numerator / denominator;
-    const xAccel = temp - (this.poleMassLength * thetaAccel * cosTheta) / this.totalMass;
+    const xAccel = temp - (POLE_MASS_LENGTH * thetaAccel * cosTheta) / TOTAL_MASS;
 
-    const newX = x + this.tau * xDot;
-    const newXDot = xDot + this.tau * xAccel;
-    const newTheta = theta + this.tau * thetaDot;
-    const newThetaDot = thetaDot + this.tau * thetaAccel;
+    const newX = x + TAU * xDot;
+    const newXDot = xDot + TAU * xAccel;
+    const newTheta = theta + TAU * thetaDot;
+    const newThetaDot = thetaDot + TAU * thetaAccel;
 
     const newDone = (
-      newX < (-1 * this.xThreshold)
-      || newX > this.xThreshold
-      || newTheta < (-1 * this.thetaThresholdRadians)
-      || newTheta > this.thetaThresholdRadians
+      newX < (-1 * X_THRESHOLD)
+      || newX > X_THRESHOLD
+      || newTheta < (-1 * THETA_THRESHOLD_RADIANS)
+      || newTheta > THETA_THRESHOLD_RADIANS
       || done
     );
     const newStepReward = newDone ? 0 : 1;
