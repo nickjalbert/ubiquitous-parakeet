@@ -53,10 +53,6 @@ function CartPoleRenderer() {
     stepFn(Math.random() >= 0.5 ? 0 : 1);
   };
 
-  const randomAgent = () => {
-    doRandomAction();
-  };
-
   // Set keyboard bindings
   const keyUpHandler = ({ key }) => {
     if (key === 'ArrowRight') {
@@ -137,7 +133,7 @@ function CartPoleRenderer() {
       </div>
       <div className={styles.divider}>&nbsp;</div>
        <div className={styles.controls__panel}>
-        <button className={styles.controls__button} onClick={randomAgent}>
+        <button className={styles.controls__button} onClick={doRandomAction}>
           Random Agent
         </button>
       </div>
