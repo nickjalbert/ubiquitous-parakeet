@@ -85,23 +85,25 @@
 .link { }
 
 .instruments {
+  display: flex;
+  justify-content: space-between;
+  margin-left: auto;
+  margin-right: auto;
   margin-bottom: 2.5rem;
   text-align: center;
-  &__container {
-    padding: 1rem;
-    border: 1px solid $color--dark1;
-  }
+  max-width: 665px;
+  padding: 1rem;
+  border: 1px solid $color--dark1;
+
   &__cart_position { }
   &__cart_speed { }
   &__pole_angle { }
-  &__pole_speed {
-    padding-right: 1.5rem
-  }
+  &__pole_speed { }
   &__label {
     font-weight: 600;
-    padding: 0rem 0.25rem 0rem 1.5rem;
+    padding: 0 0.25rem 0 0;
   }
-  &__value {}
+  &__value { }
 }
 
 .controls {

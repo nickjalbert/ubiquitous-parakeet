@@ -60,8 +60,6 @@ function CartPoleApp() {
       </div>
 
       <div className={styles.instruments}>
-        <span className={styles.instruments__container}>
-
           <span className={styles.instruments__cart_position}>
             <span className={styles.instruments__label}>
               Cart position:
@@ -97,8 +95,6 @@ function CartPoleApp() {
               {simState.thetaDot.toFixed(2)}
             </span>
           </span>
-        </span>
-
       </div>
 
       <div className={styles.controls__panel}>
