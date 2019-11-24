@@ -1,12 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import CartPoleRenderer from './CartPoleRenderer';
+import CartPoleApp from './CartPoleApp';
 import '../styles/global';
 
 function initPage() {
   const element = document.createElement('div');
   document.body.appendChild(element);
-  ReactDOM.render(<CartPoleRenderer />, element);
+  ReactDOM.render(<CartPoleApp />, element);
 }
 
 // http://youmightnotneedjquery.com/#ready

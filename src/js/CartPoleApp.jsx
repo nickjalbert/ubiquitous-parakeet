@@ -11,7 +11,7 @@ const OPEN_AI_IMPL_URL = [
 ].join('');
 
 
-function CartPoleRenderer() {
+function CartPoleApp() {
   const cartpole = new CartPoleEngine();
   const initFn = () => CartPoleEngine.getRandomInitValue();
   const [x, setX] = useState(initFn);
@@ -173,4 +173,4 @@ function CartPoleRenderer() {
   );
 }
 
-export default CartPoleRenderer;
+export default CartPoleApp;
