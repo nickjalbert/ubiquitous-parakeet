@@ -10,48 +10,19 @@ const OPEN_AI_IMPL_URL = [
   'master/gym/envs/classic_control/cartpole.py',
 ].join('');
 
+const ACTION_LEFT = 0;
+const ACTION_RIGHT = 1;
+
 
 function CartPoleApp() {
   const cartpole = new CartPoleEngine();
-  const initFn = () => CartPoleEngine.getRandomInitValue();
-  const [x, setX] = useState(initFn);
-  const [xDot, setXDot] = useState(initFn);
-  const [theta, setTheta] = useState(initFn);
-  const [thetaDot, setThetaDot] = useState(initFn);
-  const [done, setDone] = useState(false);
-  const [reward, setReward] = useState(0);
+  const [simState, setSimState] = useState(CartPoleEngine.getInitialState());
 
-  const stepFn = (action) => {
-    const {
-      stepReward,
-      stepDone,
-      newX,
-      newXDot,
-      newTheta,
-      newThetaDot,
-    } = cartpole.step(action, x, xDot, theta, thetaDot);
-    setReward(done ? reward : reward + stepReward); // no scoring after done
-    setDone(done || stepDone); // So we don't get undone
-    setX(newX);
-    setXDot(newXDot);
-    setTheta(newTheta);
-    setThetaDot(newThetaDot);
-  };
+  const stepLeft = () => setSimState(cartpole.step(ACTION_LEFT, simState));
+  const stepRight = () => setSimState(cartpole.step(ACTION_RIGHT, simState));
+  const resetFn = () => setSimState(CartPoleEngine.getInitialState());
 
-  const stepLeft = () => { stepFn(0); };
-  const stepRight = () => { stepFn(1); };
-  const resetFn = () => {
-    setReward(0);
-    setDone(false);
-    setX(initFn());
-    setXDot(initFn());
-    setTheta(initFn());
-    setThetaDot(initFn());
-  };
-
-  const doRandomAction = () => {
-    stepFn(Math.random() >= 0.5 ? 0 : 1);
-  };
+  const stepRandom = () => (Math.random() >= 0.5 ? stepLeft() : stepRight());
 
   // Set keyboard bindings
   const keyUpHandler = ({ key }) => {
@@ -72,7 +43,7 @@ function CartPoleApp() {
   return (
     <div className={styles.cartpoleApp}>
       <h1 className={styles.titleText}>Cartpole</h1>
-      <CartPoleVisualizer reward={reward} done={done} x={x} theta={theta} />
+      <CartPoleVisualizer simState={simState} />
       <div className={styles.instructions}>
         Try to balance the pole manually using the buttons below or
         the arrow keys to push the cart.
@@ -86,7 +57,7 @@ function CartPoleApp() {
               Cart position:
             </span>
             <span className={styles.instruments__value}>
-              {x.toFixed(2)}
+              {simState.x.toFixed(2)}
             </span>
           </span>
 
@@ -95,7 +66,7 @@ function CartPoleApp() {
               Cart speed:
             </span>
             <span className={styles.instruments__value}>
-              {xDot.toFixed(2)}
+              {simState.xDot.toFixed(2)}
             </span>
           </span>
 
@@ -104,7 +75,7 @@ function CartPoleApp() {
               Pole angle:
             </span>
             <span className={styles.instruments__value}>
-              {(theta * (180 / Math.PI)).toFixed(2)}
+              {(simState.theta * (180 / Math.PI)).toFixed(2)}
             </span>
           </span>
 
@@ -113,7 +84,7 @@ function CartPoleApp() {
               Pole speed:
             </span>
             <span className={styles.instruments__value}>
-              {thetaDot.toFixed(2)}
+              {simState.thetaDot.toFixed(2)}
             </span>
           </span>
         </span>
@@ -133,7 +104,7 @@ function CartPoleApp() {
       </div>
       <div className={styles.divider}>&nbsp;</div>
        <div className={styles.controls__panel}>
-        <button className={styles.controls__button} onClick={doRandomAction}>
+        <button className={styles.controls__button} onClick={stepRandom}>
           Random Agent
         </button>
       </div>

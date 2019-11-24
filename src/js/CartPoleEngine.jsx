@@ -18,10 +18,25 @@ class CartPoleEngine {
     this.xThreshold = 2.4;
   }
 
-  step(action, x, xDot, theta, thetaDot) {
+  static getInitialState() {
+    return {
+      totalReward: 0,
+      stepReward: 0,
+      done: false,
+      x: CartPoleEngine.getRandomInitValue(),
+      xDot: CartPoleEngine.getRandomInitValue(),
+      theta: CartPoleEngine.getRandomInitValue(),
+      thetaDot: CartPoleEngine.getRandomInitValue(),
+    };
+  }
+
+  step(action, state) {
     if (action !== 0 && action !== 1) {
       throw new Error(`Invalid action: ${action}, Choose 0 or 1`);
     }
+    const {
+      totalReward, done, x, xDot, theta, thetaDot,
+    } = state;
     const force = action === 1 ? this.forceMag : (-1 * this.forceMag);
     const cosTheta = Math.cos(theta);
     const sinTheta = Math.sin(theta);
@@ -37,20 +52,23 @@ class CartPoleEngine {
     const newTheta = theta + this.tau * thetaDot;
     const newThetaDot = thetaDot + this.tau * thetaAccel;
 
-    const stepDone = (
+    const newDone = (
       newX < (-1 * this.xThreshold)
       || newX > this.xThreshold
       || newTheta < (-1 * this.thetaThresholdRadians)
       || newTheta > this.thetaThresholdRadians
+      || done
     );
-    const stepReward = stepDone ? 0 : 1;
+    const newStepReward = newDone ? 0 : 1;
+    const newTotalReward = totalReward + newStepReward;
     return {
-      stepReward,
-      stepDone,
-      newX,
-      newXDot,
-      newTheta,
-      newThetaDot,
+      totalReward: newTotalReward,
+      stepReward: newStepReward,
+      done: newDone,
+      x: newX,
+      xDot: newXDot,
+      theta: newTheta,
+      thetaDot: newThetaDot,
     };
   }
 

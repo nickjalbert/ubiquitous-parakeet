@@ -9,19 +9,16 @@ import styles from '../styles/cartpole.module';
 function CartPoleVisualizer(props) {
   return (
     <div className={styles.cartpoleVisualizer}>
-      <Scoreboard reward={props.reward} />
-      <ResultAlert done={props.done} />
-      <Pole x={props.x} theta={props.theta} />
-      <Cart x={props.x} />
+      <Scoreboard reward={props.simState.totalReward} />
+      <ResultAlert done={props.simState.done} />
+      <Pole x={props.simState.x} theta={props.simState.theta} />
+      <Cart x={props.simState.x} />
     </div>
   );
 }
 
 CartPoleVisualizer.propTypes = {
-  reward: PropTypes.number.isRequired,
-  done: PropTypes.bool.isRequired,
-  x: PropTypes.number.isRequired,
-  theta: PropTypes.number.isRequired,
+  simState: PropTypes.object.isRequired,
 };
 
 export default CartPoleVisualizer;
