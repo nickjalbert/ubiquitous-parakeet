@@ -36,12 +36,15 @@ class CartPoleEngine {
     const force = action === 1 ? FORCE_MAG : (-1 * FORCE_MAG);
     const cosTheta = Math.cos(theta);
     const sinTheta = Math.sin(theta);
-    const temp = (force + (POLE_MASS_LENGTH * thetaDot * thetaDot * sinTheta)) / TOTAL_MASS;
-    const numerator = (GRAVITY * sinTheta) - (cosTheta * temp);
-    const poleMassCosThetaSquared = POLE_MASS * cosTheta * cosTheta;
-    const denominator = POLE_LENGTH * ((4.0 / 3.0) - (poleMassCosThetaSquared / TOTAL_MASS));
-    const thetaAccel = numerator / denominator;
-    const xAccel = temp - (POLE_MASS_LENGTH * thetaAccel * cosTheta) / TOTAL_MASS;
+
+    const pmlThetaDot2Sin = POLE_MASS_LENGTH * thetaDot * thetaDot * sinTheta;
+    const temp = (force + pmlThetaDot2Sin) / TOTAL_MASS;
+    const numer = (GRAVITY * sinTheta) - (cosTheta * temp);
+    const pmCosTheta2 = POLE_MASS * cosTheta * cosTheta;
+    const denom = POLE_LENGTH * ((4.0 / 3.0) - (pmCosTheta2 / TOTAL_MASS));
+    const thetaAccel = numer / denom;
+    const pmlThetaAccelCosTheta = POLE_MASS_LENGTH * thetaAccel * cosTheta;
+    const xAccel = temp - (pmlThetaAccelCosTheta / TOTAL_MASS);
 
     const newX = x + TAU * xDot;
     const newXDot = xDot + TAU * xAccel;
