@@ -6,9 +6,9 @@ import Pole from './Pole';
 import Cart from './Cart';
 import styles from '../styles/cartpole.module';
 
-function CartPoleContainer(props) {
+function CartPoleVisualizer(props) {
   return (
-    <div className={styles.cartpoleContainer}>
+    <div className={styles.cartpoleVisualizer}>
       <Scoreboard reward={props.reward} />
       <ResultAlert done={props.done} />
       <Pole x={props.x} theta={props.theta} />
@@ -17,11 +17,11 @@ function CartPoleContainer(props) {
   );
 }
 
-CartPoleContainer.propTypes = {
+CartPoleVisualizer.propTypes = {
   reward: PropTypes.number.isRequired,
   done: PropTypes.bool.isRequired,
   x: PropTypes.number.isRequired,
   theta: PropTypes.number.isRequired,
 };
 
-export default CartPoleContainer;
+export default CartPoleVisualizer;

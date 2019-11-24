@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 import CartPoleEngine from './CartPoleEngine';
-import CartPoleContainer from './CartPoleContainer';
+import CartPoleVisualizer from './CartPoleVisualizer';
 
 import styles from '../styles/cartpole.module';
 
@@ -70,9 +70,9 @@ function CartPoleApp() {
   });
 
   return (
-    <div className={styles.cartpoleRenderer}>
+    <div className={styles.cartpoleApp}>
       <h1 className={styles.titleText}>Cartpole</h1>
-      <CartPoleContainer reward={reward} done={done} x={x} theta={theta} />
+      <CartPoleVisualizer reward={reward} done={done} x={x} theta={theta} />
       <div className={styles.instructions}>
         Try to balance the pole manually using the buttons below or
         the arrow keys to push the cart.
