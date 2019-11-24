@@ -13,18 +13,7 @@ const OPEN_AI_IMPL_URL = [
 const ACTION_LEFT = 0;
 const ACTION_RIGHT = 1;
 
-
-function CartPoleApp() {
-  const cartpole = new CartPoleEngine();
-  const [simState, setSimState] = useState(CartPoleEngine.getInitialState());
-
-  const stepLeft = () => setSimState(cartpole.step(ACTION_LEFT, simState));
-  const stepRight = () => setSimState(cartpole.step(ACTION_RIGHT, simState));
-  const resetFn = () => setSimState(CartPoleEngine.getInitialState());
-
-  const stepRandom = () => (Math.random() >= 0.5 ? stepLeft() : stepRight());
-
-  // Set keyboard bindings
+function getKeyboardBindingFn(stepLeft, stepRight) {
   const keyUpHandler = ({ key }) => {
     if (key === 'ArrowRight') {
       stepRight();
@@ -33,12 +22,24 @@ function CartPoleApp() {
       stepLeft();
     }
   };
-  useEffect(() => {
+  return () => {
     window.addEventListener('keyup', keyUpHandler);
-    return () => {
-      window.removeEventListener('keyup', keyUpHandler);
-    };
-  });
+    return () => window.removeEventListener('keyup', keyUpHandler);
+  };
+}
+
+
+function CartPoleApp() {
+  const cartpole = new CartPoleEngine();
+  const [simState, setSimState] = useState(CartPoleEngine.getInitialState());
+
+  const stepLeft = () => setSimState(cartpole.step(ACTION_LEFT, simState));
+  const stepRight = () => setSimState(cartpole.step(ACTION_RIGHT, simState));
+  const resetFn = () => setSimState(CartPoleEngine.getInitialState());
+  const stepRandom = () => (Math.random() >= 0.5 ? stepLeft() : stepRight());
+
+  const keyboardBindingFn = getKeyboardBindingFn(stepLeft, stepRight);
+  useEffect(keyboardBindingFn);
 
   return (
     <div className={styles.cartpoleApp}>
