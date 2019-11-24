@@ -31,7 +31,7 @@ then
     mv "$PUBLISH_REPO/tmpbuild" "$PUBLISH_REPO/cartpole"
     cd $PUBLISH_REPO
     git add ./cartpole
-    git commit -a -m "Publish updated cartpole (repo: ubiquitous-parakeet, hash: $RELEASE_VERSION"
+    git commit -a -m "Publish updated cartpole (repo: ubiquitous-parakeet, hash: $RELEASE_VERSION )"
     git push
 fi
 
