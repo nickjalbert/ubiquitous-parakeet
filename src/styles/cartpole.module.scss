@@ -58,9 +58,64 @@
   font-weight: 600;
 }
 
+.tabList {
+  display: inline-block;
+  border: 1px solid transparent;
+  border-bottom: none;
+  bottom: -1px;
+  position: relative;
+  list-style: none;
+  padding: 6px 12px;
+  cursor: pointer;
+  margin: 0 0 0 2.3rem;
+  padding-bottom: 1.5rem;
+}
+
+.tabPanel {
+  display: none;
+}
+
+.tab {
+  display: inline-block;
+  border: 1px solid transparent;
+  border-bottom: none;
+  bottom: -1px;
+  position: relative;
+  list-style: none;
+  padding: 6px 12px;
+  cursor: pointer;
+}
+
+.selectedTab {
+  background: white;
+  border-color: #aaa;
+  color: black;
+  border-radius: 5px 5px 0 0;
+  display: inline-block;
+  border: 1px solid #aaa;
+  border-bottom: none;
+  bottom: -1px;
+  position: relative;
+  list-style: none;
+  padding: 6px 12px;
+  cursor: pointer;
+}
+
+.selectedTabPanel { 
+  display: block;
+  position: relative;
+  top: -1.5rem;
+  margin: 0 3.1rem;
+  padding: 1rem 4rem;
+  background-color: $color--vvv-light-grey;
+  border: none;
+  background-color: white;
+  border: 1px solid #aaa;
+}
+
 .instructions {
   text-align: center;
-  margin-bottom: 2.5rem;
+  margin-bottom: 1rem;
 }
 
 .divider {
@@ -71,8 +126,10 @@
 }
 
 .description {
-  margin: 0 2rem 1rem 2rem;
-  padding-bottom: 1rem;
+  p {
+    margin: 0;
+    margin-bottom: 0.5rem;
+  }
   &__list {
     padding: 0 2rem;
     margin: 0.75rem 0.5rem 0.75rem 0.5rem;
@@ -89,7 +146,7 @@
   justify-content: space-between;
   margin-left: auto;
   margin-right: auto;
-  margin-bottom: 2.5rem;
+  margin-bottom: 1rem;
   text-align: center;
   max-width: 665px;
   padding: 1rem;
@@ -108,21 +165,21 @@
 
 .controls {
   &__panel {
-    margin-bottom: 1.5rem;
     width:100%;
-    background-color: $color--vvv-light-grey;
+    background-color: white;
     text-align: center;
   }
   &__button {
     border-radius: 6px;
-    border: 2px solid $color--grey;
-    background-color: $color--blue;
-    width: 175px;
-    padding: 15px 32px;
+    border: 2px solid #82808F;
+    background-color: #67D5CD;
+    width: 150px;
+    padding: 10px 3px;
     text-align: center;
     text-decoration: none;
     display: inline-block;
-    font-size: 16px;
-    margin: 0 2rem;
+    font-size: 15px;
+    font-weight: 600;
+    margin: 0 1rem;
   }
 }
