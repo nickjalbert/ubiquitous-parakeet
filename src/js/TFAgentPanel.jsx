@@ -6,18 +6,18 @@ import CartPoleEngine from './CartPoleEngine';
 import styles from '../styles/cartpole.module';
 
 class Trainer {
-  static doSteps(model, state) {
+  static doSteps(model, state, actionHistory, resolve) {
     const inputArray = [state.x, state.xDot, state.theta, state.thetaDot];
     const predict = model.predict(tf.tensor(inputArray, [1,4]));
     predict.array().then((result) => {
       const leftProbability = result[0][0];
       const action = Math.random() <= leftProbability ? 0 : 1;
+      actionHistory.push([inputArray, action])
       const newState = CartPoleEngine.step(action, state);
-      console.log(`Action: ${action === 0 ? 'left' : 'right'}`);
       if (!newState.done) {
-        Trainer.doSteps(model, newState)
+        Trainer.doSteps(model, newState, actionHistory, resolve)
       } else {
-        console.log(`Total reward: ${newState.totalReward}`);
+        resolve(actionHistory);
       }
     });
   }
@@ -32,7 +32,30 @@ class Trainer {
     });
     model.compile({optimizer: 'sgd', loss: 'meanSquaredError'});
     const initState = CartPoleEngine.getInitialState();
-    Trainer.doSteps(model, initState);
+    const actionHistory = [];
+
+    const promise = new Promise((resolve, reject) => {
+        Trainer.doSteps(model, initState, actionHistory, resolve)
+    });
+    promise.then((actionHistory) => {
+      actionHistory.reverse();
+      const DISCOUNT = .9;
+      let count = 0;
+      let currReward = 0;
+      const actionHistoryReward = [];
+      actionHistory.forEach(([input, action]) => {
+        currReward = 1 + (DISCOUNT * currReward );
+        actionHistoryReward.push([
+          input,
+          action,
+          currReward
+        ]);
+      });
+      actionHistoryReward.reverse();
+      actionHistoryReward.forEach(([input, action, reward]) => {
+        console.log(`Action: ${action}, Reward ${reward}`);
+      });
+    });
   }
 }
 
