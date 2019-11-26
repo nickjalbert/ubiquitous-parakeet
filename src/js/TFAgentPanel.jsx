@@ -27,20 +27,28 @@ class Trainer {
       layers: [
         tf.layers.dense({inputShape: [4], units: 32, activation: 'relu'}),
         tf.layers.dense({units: 16, activation: 'relu'}),
-        tf.layers.dense({units: 2, activation: 'softmax'}),
+        tf.layers.dense({units: 1, activation: 'sigmoid'}),
       ]
     });
     model.compile({optimizer: 'sgd', loss: 'meanSquaredError'});
+    let i = 0;
+    while (i < 5)  {
+      console.log(`Training step: ${i}`);
+      Trainer.trainAStep(model)
+      i += 1;
+    }
+  }
+
+  static trainAStep(model) {
     const initState = CartPoleEngine.getInitialState();
     const actionHistory = [];
-
     const promise = new Promise((resolve, reject) => {
         Trainer.doSteps(model, initState, actionHistory, resolve)
     });
     promise.then((actionHistory) => {
+      // calculate discounted reward
       actionHistory.reverse();
       const DISCOUNT = .9;
-      let count = 0;
       let currReward = 0;
       const actionHistoryReward = [];
       actionHistory.forEach(([input, action]) => {
@@ -52,10 +60,26 @@ class Trainer {
         ]);
       });
       actionHistoryReward.reverse();
-      actionHistoryReward.forEach(([input, action, reward]) => {
-        console.log(`Action: ${action}, Reward ${reward}`);
+
+      // normalize reward
+      const allRewards = []
+      actionHistoryReward.forEach(([s, a, r]) => allRewards.push(r));
+      const moments = tf.moments(allRewards);
+      const mean = moments.mean.arraySync();
+      const stdDev = Math.sqrt(moments.variance.arraySync());
+      const actionHistoryNormalizedReward = [];
+      actionHistoryReward.forEach(([s, a, r]) => {
+        const normedR = (r - mean)/stdDev;
+        actionHistoryNormalizedReward.push([s, a, normedR]);
       });
-    });
+
+      const states = actionHistoryNormalizedReward.map(([s, a, r]) => s);
+      const rewards = actionHistoryNormalizedReward.map(([s, a, r]) => r);
+      const trainTensor = tf.tensor(states, [states.length, 4])
+      const trainResults = tf.tensor(rewards, [states.length, 1])
+      const h = model.fit(trainTensor, trainResults);
+      return h;
+    }).then((h) => {console.log(h.history.loss)});
   }
 }
 
