@@ -5,81 +5,93 @@ import CartPoleEngine from './CartPoleEngine';
 
 import styles from '../styles/cartpole.module';
 
-class Trainer {
-  static doSteps(model, state, actionHistory, resolve) {
-    const inputArray = [state.x, state.xDot, state.theta, state.thetaDot];
-    const predict = model.predict(tf.tensor(inputArray, [1,4]));
-    predict.array().then((result) => {
-      const leftProbability = result[0][0];
-      const action = Math.random() <= leftProbability ? 0 : 1;
-      actionHistory.push([inputArray, action])
-      const newState = CartPoleEngine.step(action, state);
-      if (!newState.done) {
-        Trainer.doSteps(model, newState, actionHistory, resolve)
-      } else {
-        resolve(actionHistory);
-      }
-    });
-  }
+const TRAINING_BATCHES = 2;
+const ROLLOUTS_PER_BATCH = 5;
+const REWARD_DISCOUNT = .9;
 
+class Trainer {
   static doTraining() {
     const model = tf.sequential({
       layers: [
-        tf.layers.dense({inputShape: [4], units: 32, activation: 'relu'}),
-        tf.layers.dense({units: 16, activation: 'relu'}),
+        tf.layers.dense({inputShape: [4], units: 8, activation: 'relu'}),
+        tf.layers.dense({units: 4, activation: 'relu'}),
         tf.layers.dense({units: 1, activation: 'sigmoid'}),
       ]
     });
     model.compile({optimizer: 'sgd', loss: 'meanSquaredError'});
-    let i = 0;
-    while (i < 5)  {
-      console.log(`Training step: ${i}`);
-      Trainer.trainAStep(model)
-      i += 1;
-    }
+    Trainer.doTrainingStep(model, 0);
   }
 
-  static trainAStep(model) {
-    const initState = CartPoleEngine.getInitialState();
-    const actionHistory = [];
-    const promise = new Promise((resolve, reject) => {
-        Trainer.doSteps(model, initState, actionHistory, resolve)
+  static doTrainingStep(model, iteration) {
+    if (iteration >= TRAINING_BATCHES) {
+      console.log(`Training finished at iteration ${iteration}`);
+      return;
+    }
+    console.log(`Getting rollouts for training iteration ${iteration}`);
+    const rollouts = Array(ROLLOUTS_PER_BATCH).fill().map(() => {
+        return Trainer.getRollout(model)
     });
-    promise.then((actionHistory) => {
-      // calculate discounted reward
-      actionHistory.reverse();
-      const DISCOUNT = .9;
-      let currReward = 0;
-      const actionHistoryReward = [];
-      actionHistory.forEach(([input, action]) => {
-        currReward = 1 + (DISCOUNT * currReward );
-        actionHistoryReward.push([
-          input,
-          action,
-          currReward
-        ]);
-      });
-      actionHistoryReward.reverse();
+    console.log(`Training for training iteration ${iteration}`);
+    Trainer.trainModel(model, rollouts, iteration);
+    console.log(`Done training iteration ${iteration}`);
+  }
+ 
+  static getRollout(model) {
+    let state = CartPoleEngine.getInitialState();
+    const rollout = [];
+    while (!state.done) {
+      const action = Trainer.getOnPolicyAction(model, state);
+      rollout.push([state, action]);
+      state = CartPoleEngine.step(action, state);
+    }
+    return Trainer.calculateRewards(rollout);
+  }
 
-      // normalize reward
-      const allRewards = []
-      actionHistoryReward.forEach(([s, a, r]) => allRewards.push(r));
-      const moments = tf.moments(allRewards);
-      const mean = moments.mean.arraySync();
-      const stdDev = Math.sqrt(moments.variance.arraySync());
-      const actionHistoryNormalizedReward = [];
-      actionHistoryReward.forEach(([s, a, r]) => {
-        const normedR = (r - mean)/stdDev;
-        actionHistoryNormalizedReward.push([s, a, normedR]);
-      });
+  static getOnPolicyAction(model, state) {
+    const stateTensor = Trainer._getTensorFromState(state);
+    const predict = model.predict(stateTensor);
+    const leftProbability = predict.arraySync()[0][0];
+    return Math.random() <= leftProbability ? 0 : 1;
+  }
 
-      const states = actionHistoryNormalizedReward.map(([s, a, r]) => s);
-      const rewards = actionHistoryNormalizedReward.map(([s, a, r]) => r);
-      const trainTensor = tf.tensor(states, [states.length, 4])
-      const trainResults = tf.tensor(rewards, [states.length, 1])
-      const h = model.fit(trainTensor, trainResults);
-      return h;
-    }).then((h) => {console.log(h.history.loss)});
+  static calculateRewards(rollout) {
+    rollout.reverse();
+    let currReward = 0;
+    const enhancedRollout = [];
+    const allRewards = []
+    rollout.forEach(([state, action]) => {
+      currReward = 1 + (REWARD_DISCOUNT * currReward);
+      enhancedRollout.push([state, action, currReward]);
+      allRewards.push(currReward)
+    });
+    enhancedRollout.reverse();
+
+    // normalize reward
+    const moments = tf.moments(allRewards);
+    const mean = moments.mean.arraySync();
+    const stdDev = Math.sqrt(moments.variance.arraySync());
+    const actionHistoryNormalizedReward = [];
+    return enhancedRollout.map(([state, action, reward]) => {
+      const normedReward = (reward - mean)/stdDev;
+      return [state, action, normedReward];
+    });
+  }
+
+  static trainModel(model, rollouts, iteration) {
+    const states = rollouts.map((r) => r.map(([state, _, __]) => {
+      return [state.x, state.xDot, state.theta, state.thetaDot];
+    })).flat();
+    const rewards = rollouts.map((r) => r.map(([_, __, r]) => r)).flat();
+    const trainTensor = tf.tensor(states, [states.length, 4])
+    const trainResults = tf.tensor(rewards, [rewards.length, 1])
+    model.fit(trainTensor, trainResults).then(
+      () => Trainer.doTrainingStep(model, iteration + 1)
+    );
+  }
+
+  static _getTensorFromState(state) {
+    const stateArr = [state.x, state.xDot, state.theta, state.thetaDot];
+    return tf.tensor(stateArr, [1,4]);
   }
 }
 
