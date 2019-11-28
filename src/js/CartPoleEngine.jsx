@@ -51,17 +51,16 @@ class CartPoleEngine {
     const newTheta = theta + TAU * thetaDot;
     const newThetaDot = thetaDot + TAU * thetaAccel;
 
-    const newStepReward = newDone ? 0 : 1;
-    const newTotalReward = totalReward + newStepReward;
-
     const newDone = (
       newX < (-1 * X_THRESHOLD)
       || newX > X_THRESHOLD
       || newTheta < (-1 * THETA_THRESHOLD_RADIANS)
       || newTheta > THETA_THRESHOLD_RADIANS
-      || newTotalReward > 200
+      || totalReward > 200
       || done
     );
+    const newStepReward = newDone ? 0 : 1;
+    const newTotalReward = totalReward + newStepReward;
 
     return {
       totalReward: newTotalReward,
