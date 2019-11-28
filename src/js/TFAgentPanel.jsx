@@ -4,8 +4,8 @@ import CartPoleEngine from './CartPoleEngine';
 
 import styles from '../styles/cartpole.module';
 
-const TRAINING_EPOCHS = 6;
-const ROLLOUTS_PER_EPOCH = 10;
+const TRAINING_EPOCHS = 200;
+const ROLLOUTS_PER_EPOCH = 5;
 const REWARD_DISCOUNT = 0.9;
 
 class Trainer {
@@ -17,7 +17,7 @@ class Trainer {
         tf.layers.dense({ units: 1, activation: 'sigmoid' }),
       ],
     });
-    model.compile({ optimizer: 'sgd', loss: 'binaryCrossentropy' });
+    model.compile({ optimizer: 'adam', loss: 'binaryCrossentropy' });
     Trainer.doTrainingEpochs(model, 0);
   }
 
