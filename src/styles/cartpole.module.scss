@@ -141,7 +141,15 @@
 
 .link { }
 
-.instruments {
+.disableDiv {
+  position: absolute;
+  width: 82%;
+  height: 32%;
+  background-color: white;
+  opacity: 60%;
+}
+
+@mixin flexDisplayBox {
   display: flex;
   justify-content: space-between;
   margin-left: auto;
@@ -152,6 +160,10 @@
   padding: 1rem;
   border: 1px solid $color--dark1;
 
+}
+
+.instruments {
+  @include flexDisplayBox;
   &__cart_position { }
   &__cart_speed { }
   &__pole_angle { }
@@ -163,13 +175,26 @@
   &__value { }
 }
 
+.trainingInfo {
+  @include flexDisplayBox;
+  justify-content: space-around;
+}
+
+.descriptionBox {
+  @include flexDisplayBox;
+  text-align: left;
+  display: block;
+}
+
 .controls {
   &__panel {
     width:100%;
     background-color: white;
     text-align: center;
+    margin-bottom: 1rem;
   }
   &__button {
+    cursor: pointer;
     border-radius: 6px;
     border: 2px solid #82808F;
     background-color: #67D5CD;
@@ -181,5 +206,19 @@
     font-size: 15px;
     font-weight: 600;
     margin: 0 1rem;
+  }
+  &__training {
+    margin-bottom: 1rem;
+    label {
+      display: block;
+      margin-bottom: 1rem;
+    }
+    input {
+      width: 100px;
+      padding: 5px;
+      margin-left: 1rem;
+    }
+
+
   }
 }

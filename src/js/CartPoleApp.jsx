@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import {
   Tab, Tabs, TabList, TabPanel,
 } from 'react-tabs';
-import * as tf from '@tensorflow/tfjs';
 
 
 import CartPoleEngine from './CartPoleEngine';
@@ -10,7 +9,7 @@ import CartPoleVisualizer from './CartPoleVisualizer';
 import InstrumentPanel from './InstrumentPanel';
 import ManualAgentPanel from './ManualAgentPanel';
 import RandomAgentPanel from './RandomAgentPanel';
-import TFAgentPanel from './TFAgentPanel';
+import TFAgentPanel, { Trainer } from './TFAgentPanel';
 import InfoPanel from './InfoPanel';
 
 import 'react-tabs/style/react-tabs.scss';
@@ -37,31 +36,21 @@ function getKeyboardBindingFn(stepLeft, stepRight) {
   };
 }
 
-function doTensorFlow() {
-  // Define a model for linear regression.
-  const model = tf.sequential();
-  model.add(tf.layers.dense({ units: 1, inputShape: [1] }));
-
-  model.compile({ loss: 'meanSquaredError', optimizer: 'sgd' });
-
-  // Generate some synthetic data for training.
-  const xs = tf.tensor2d([1, 2, 3, 4], [4, 1]);
-  const ys = tf.tensor2d([1, 3, 5, 7], [4, 1]);
-
-  // Train the model using the data.
-  model.fit(xs, ys, { epochs: 10 }).then(() => {
-    // Use the model to do inference on a data point the model hasn't seen before:
-    // Open the browser devtools to see the output
-    model.predict(tf.tensor2d([5], [1, 1])).print();
-  });
-}
-
-function autoRunStep(currState, setSimState) {
+function runRandomSteps(currState, setSimState) {
   const action = (Math.random() >= 0.5 ? LEFT : RIGHT);
   const newState = CartPoleEngine.step(action, currState);
   setSimState(newState);
   if (!newState.done) {
-    setTimeout(() => autoRunStep(newState, setSimState), RUN_INTERVAL);
+    setTimeout(() => runRandomSteps(newState, setSimState), RUN_INTERVAL);
+  }
+}
+
+function runTFSteps(model, state, setSimState) {
+  const action = Trainer.returnStatePrediction(model, state);
+  const newState = CartPoleEngine.step(action, state);
+  setSimState(newState);
+  if (!newState.done) {
+    setTimeout(() => runTFSteps(model, newState, setSimState), RUN_INTERVAL);
   }
 }
 
@@ -73,7 +62,12 @@ function CartPoleApp() {
   const resetFn = () => setSimState(CartPoleEngine.getInitialState());
   const stepRandom = () => (Math.random() >= 0.5 ? stepLeft() : stepRight());
   const randomAgent = () => {
-    setTimeout(() => autoRunStep(simState, setSimState), RUN_INTERVAL);
+    setTimeout(() => runRandomSteps(simState, setSimState), RUN_INTERVAL);
+  };
+  const runTFAgent = (model) => {
+    const newState = CartPoleEngine.getInitialState();
+    setSimState(newState);
+    runTFSteps(model, newState, setSimState);
   };
   useEffect(getKeyboardBindingFn(stepLeft, stepRight));
 
@@ -84,6 +78,7 @@ function CartPoleApp() {
       <Tabs
         selectedTabClassName={styles.selectedTab}
         selectedTabPanelClassName={styles.selectedTabPanel}
+        defaultIndex={2}
       >
         <TabList className={styles.tabList}>
           <Tab className={styles.tab}>Manual Control</Tab>
@@ -109,7 +104,7 @@ function CartPoleApp() {
         </TabPanel>
         <TabPanel className={styles.tabPanel}>
           <InstrumentPanel simState={simState} />
-          <TFAgentPanel doTensorFlow={doTensorFlow} />
+          <TFAgentPanel runTFAgent={runTFAgent} />
         </TabPanel>
         <TabPanel className={styles.tabPanel}>
           <InfoPanel />
