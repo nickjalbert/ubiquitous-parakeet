@@ -1,15 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 import * as tf from '@tensorflow/tfjs';
 import CartPoleEngine from './CartPoleEngine';
 
 import styles from '../styles/cartpole.module';
 
-const TRAINING_EPOCHS = 200;
+const TRAINING_EPOCHS = 5;
 const ROLLOUTS_PER_EPOCH = 5;
 const REWARD_DISCOUNT = 0.9;
 
 class Trainer {
-  static doTraining() {
+  static getModel() {
     const model = tf.sequential({
       layers: [
         tf.layers.dense({ inputShape: [4], units: 16, activation: 'relu' }),
@@ -18,7 +18,12 @@ class Trainer {
       ],
     });
     model.compile({ optimizer: 'adam', loss: 'binaryCrossentropy' });
+    return model;
+  }
+
+  static doTraining(model) {
     Trainer.doTrainingEpochs(model, 0);
+    return model;
   }
 
   static doTrainingEpochs(model, epochNum) {
@@ -113,15 +118,6 @@ class Trainer {
       if (reward <= 0 && action === 1) {
         return 1;
       }
-      /*
-      if (reward > 0) {
-        // console.log(`returning good ${action} with reward ${reward}`);
-        return action;
-      }
-      const negatedAction = action ? 0 : 1;
-      // console.log(`returning ${negatedAction}, was ${action} with reward ${reward}`);
-      return negatedAction
-      */
     }
     const rewards = rollouts.map((rollout) => rollout.map(rewardFn)).flat();
     const trainTensor = tf.tensor(states, [states.length, 4]);
@@ -139,10 +135,30 @@ class Trainer {
 
 
 function TFAgentPanel() {
+  const [tfAgent, setTFAgent] = useState(null);
+  const train = () => {
+    let model = tfAgent;
+    if (model === null) {
+      model = Trainer.getModel();
+      setTFAgent(model);
+    }
+    setTFAgent(Trainer.doTraining(model));
+  };
+
+  const reset = () => {
+    setTFAgent(null);
+  }
   return (
     <div className={styles.controls__panel}>
+      <button className={styles.controls__button} onClick={train}>
+        Train agent for 5 epochs
+      </button>
+       <button className={styles.controls__button} onClick={reset}>
+        Reset agent
+      </button>
+     
       <button className={styles.controls__button} onClick={Trainer.doTraining}>
-        Do TensorFlow
+        Run agent
       </button>
     </div>
   );
