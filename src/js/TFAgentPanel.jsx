@@ -23,7 +23,6 @@ class Trainer {
 
   static doTraining(model) {
     Trainer.doTrainingEpochs(model, 0);
-    return model;
   }
 
   static doTrainingEpochs(model, epochNum) {
@@ -134,19 +133,14 @@ class Trainer {
 }
 
 
-function TFAgentPanel() {
-  const [tfAgent, setTFAgent] = useState(null);
+function TFAgentPanel(props) {
+  const [tfAgent, setTFAgent] = useState(Trainer.getModel());
   const train = () => {
-    let model = tfAgent;
-    if (model === null) {
-      model = Trainer.getModel();
-      setTFAgent(model);
-    }
-    setTFAgent(Trainer.doTraining(model));
+    Trainer.doTraining(tfAgent);
   };
 
   const reset = () => {
-    setTFAgent(null);
+    setTFAgent(Trainer.getModel());
   }
   return (
     <div className={styles.controls__panel}>
@@ -156,8 +150,12 @@ function TFAgentPanel() {
        <button className={styles.controls__button} onClick={reset}>
         Reset agent
       </button>
+      <button className={styles.controls__button} onClick={props.resetSim}>
+        Reset sim 
+      </button>
      
-      <button className={styles.controls__button} onClick={Trainer.doTraining}>
+    
+      <button className={styles.controls__button} onClick={() => props.runTFAgent(tfAgent)}>
         Run agent
       </button>
     </div>

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import * as tf from '@tensorflow/tfjs';
 import {
   Tab, Tabs, TabList, TabPanel,
 } from 'react-tabs';
@@ -36,13 +37,27 @@ function getKeyboardBindingFn(stepLeft, stepRight) {
   };
 }
 
-function autoRunStep(currState, setSimState) {
+function runRandomSteps(currState, setSimState) {
   const action = (Math.random() >= 0.5 ? LEFT : RIGHT);
   const newState = CartPoleEngine.step(action, currState);
   setSimState(newState);
   if (!newState.done) {
-    setTimeout(() => autoRunStep(newState, setSimState), RUN_INTERVAL);
+    setTimeout(() => runRandomSteps(newState, setSimState), RUN_INTERVAL);
   }
+}
+
+function runTFSteps(model, state, setSimState) {
+  const stateArr = [state.x, state.xDot, state.theta, state.thetaDot];
+  const simTensor = tf.tensor(stateArr, [1, 4]);
+  const leftProbability = model.predict(simTensor).arraySync()[0][0];
+  console.log(leftProbability);
+  const action = leftProbability >= 0.5 ? LEFT : RIGHT;
+  const newState = CartPoleEngine.step(action, state);
+  setSimState(newState);
+  if (!newState.done) {
+    setTimeout(() => runTFSteps(model, newState, setSimState), RUN_INTERVAL);
+  }
+
 }
 
 function CartPoleApp() {
@@ -53,7 +68,12 @@ function CartPoleApp() {
   const resetFn = () => setSimState(CartPoleEngine.getInitialState());
   const stepRandom = () => (Math.random() >= 0.5 ? stepLeft() : stepRight());
   const randomAgent = () => {
-    setTimeout(() => autoRunStep(simState, setSimState), RUN_INTERVAL);
+    setTimeout(() => runRandomSteps(simState, setSimState), RUN_INTERVAL);
+  };
+  const runTFAgent = (model) => {
+    const newState = CartPoleEngine.getInitialState();
+    setSimState(newState);
+    runTFSteps(model, newState, setSimState);
   };
   useEffect(getKeyboardBindingFn(stepLeft, stepRight));
 
@@ -90,7 +110,7 @@ function CartPoleApp() {
         </TabPanel>
         <TabPanel className={styles.tabPanel}>
           <InstrumentPanel simState={simState} />
-          <TFAgentPanel />
+          <TFAgentPanel runTFAgent={runTFAgent} resetSim={resetFn} />
         </TabPanel>
         <TabPanel className={styles.tabPanel}>
           <InfoPanel />

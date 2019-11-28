@@ -56,6 +56,7 @@ class CartPoleEngine {
       || newX > X_THRESHOLD
       || newTheta < (-1 * THETA_THRESHOLD_RADIANS)
       || newTheta > THETA_THRESHOLD_RADIANS
+      || newTotalReward > 200
       || done
     );
     const newStepReward = newDone ? 0 : 1;
