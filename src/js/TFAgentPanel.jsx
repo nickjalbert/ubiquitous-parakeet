@@ -27,21 +27,17 @@ class Trainer {
 
   static doTrainingEpochs(model, epochNum) {
     if (epochNum >= TRAINING_EPOCHS) {
-      console.log(`Training finished at epochNum ${epochNum}`);
       return;
     }
     Trainer.evaluateModel(model, epochNum);
-    console.log(`Running epoch ${epochNum}`);
     const rollouts = Trainer.getRollouts(ROLLOUTS_PER_EPOCH, model, true);
     Trainer.trainModel(model, rollouts, epochNum);
   }
 
   static evaluateModel(model, epochNum) {
     const rollouts = Trainer.getRollouts(ROLLOUTS_PER_EPOCH, model, false);
-    console.log(rollouts);
     const actions = rollouts.reduce((a, b) => a + b.length, 0);
     const avgR = actions / rollouts.length;
-    console.log(`Rollouts from epoch ${epochNum}: ${avgR} avg reward`);
   }
 
   static getRollouts(count, model, explore) {
@@ -65,9 +61,6 @@ class Trainer {
   static getOnPolicyAction(model, stateTensor, explore) {
     const predict = model.predict(stateTensor);
     const leftProbability = predict.arraySync()[0][0];
-    if (!explore ) {
-      //console.log(leftProbability);
-    }
     const nnAction = leftProbability > 0.5 ? 0 : 1;
     const chosenAction = Math.random() <= leftProbability ? 0 : 1;
     return explore ? chosenAction : nnAction;
@@ -153,7 +146,6 @@ function TFAgentPanel(props) {
       <button className={styles.controls__button} onClick={props.resetSim}>
         Reset sim 
       </button>
-     
     
       <button className={styles.controls__button} onClick={() => props.runTFAgent(tfAgent)}>
         Run agent
